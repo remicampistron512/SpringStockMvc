@@ -1,44 +1,87 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org"
-xmlns:layout = "http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate = "layout">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
 
 <head>
   <meta charset="UTF-8">
   <title>Mes articles</title>
-  <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
 </head>
+
 <body>
 <div layout:fragment="content">
-  <div class="container">
-    <div class="card-heading">Liste des articles</div>
-    <form th:action="@{/index}" method="get">
-      <label>keyword</label>
-      <input type="text" name ="keyword" th:value="${keyword}">
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-    <div class="card-body">
-      <table class="table">
-        <tr>
-          <th>Id</th>
-          <th>Description</th>
-          <th>Prix</th>
-        </tr>
-        <tr th:each="a:${listArticle}">
-          <td th:text="${a.id}"></td>
-          <td th:text="${a.description}"></td>
-          <td th:text="${a.price} "></td>
-          <td><a th:href="@{/delete(id=${a.id}, page=${currentPage}, keyword=${keyword})}">Delete</a></td>
-        </tr>
 
-      </table>
+  <div class="row justify-content-center mt-4">
+    <div class="col-12 col-lg-10">
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          Liste des articles
+        </div>
+
+        <div class="card-body">
+
+          <form th:action="@{/index}" method="get" class="row g-3 align-items-end mb-4">
+            <div class="col-md-6">
+              <label for="keyword" class="form-label">Keyword</label>
+              <input id="keyword"
+                     type="text"
+                     name="keyword"
+                     class="form-control"
+                     th:value="${keyword}">
+            </div>
+            <div class="col-md-auto">
+              <button type="submit" class="btn btn-primary">
+                Search
+              </button>
+            </div>
+          </form>
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+              <thead class="table-light">
+              <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="a : ${listArticle}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${a.description}"></td>
+                <td th:text="${a.price}"></td>
+                <td>
+                  <a class="btn btn-sm btn-danger"
+                     th:href="@{/delete(id=${a.id}, page=${currentPage}, keyword=${keyword})}">
+                    Delete
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <nav th:if="${pages != null and #arrays.length(pages) > 0}" aria-label="Pagination des articles">
+            <ul class="pagination justify-content-center mt-4">
+              <li class="page-item"
+                  th:each="page, status : ${pages}"
+                  th:classappend="${currentPage == status.index} ? ' active' : ''">
+                <a class="page-link"
+                   th:href="@{/index(page=${status.index}, keyword=${keyword})}"
+                   th:text="${status.index + 1}"></a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+      </div>
+
     </div>
-    <ul class="nav nav-pills">
-      <li th:class="${currentPage==status.index}?'active':''" th:each="page,status:${pages}">
-        <a th:href="@{/index(page=${status.index},keyword=${keyword})}" th:text="${status.index}"></a>
-      </li>
-    </ul>
   </div>
+
 </div>
 </body>
 </html>
