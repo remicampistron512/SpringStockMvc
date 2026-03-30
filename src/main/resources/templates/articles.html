@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+xmlns:layout = "http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate = "layout">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mes articles</title>
+  <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container">
+    <div class="card-heading">Liste des articles</div>
+    <form th:action="@{/index}" method="get">
+      <label>keyword</label>
+      <input type="text" name ="keyword" th:value="${keyword}">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>Id</th>
+          <th>Description</th>
+          <th>Prix</th>
+        </tr>
+        <tr th:each="a:${listArticle}">
+          <td th:text="${a.id}"></td>
+          <td th:text="${a.description}"></td>
+          <td th:text="${a.price} "></td>
+          <td><a th:href="@{/delete(id=${a.id}, page=${currentPage}, keyword=${keyword})}">Delete</a></td>
+        </tr>
+
+      </table>
+    </div>
+    <ul class="nav nav-pills">
+      <li th:class="${currentPage==status.index}?'active':''" th:each="page,status:${pages}">
+        <a th:href="@{/index(page=${status.index},keyword=${keyword})}" th:text="${status.index}"></a>
+      </li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
