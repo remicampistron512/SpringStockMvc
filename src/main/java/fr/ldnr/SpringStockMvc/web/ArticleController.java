@@ -1,14 +1,23 @@
 package fr.ldnr.SpringStockMvc.web;
 
 import fr.ldnr.SpringStockMvc.entities.Article;
+import fr.ldnr.SpringStockMvc.entities.Cart;
+import fr.ldnr.SpringStockMvc.entities.CartItem;
 import fr.ldnr.SpringStockMvc.entities.Category;
+import fr.ldnr.SpringStockMvc.entities.User;
 import fr.ldnr.SpringStockMvc.repositories.ArticleRepository;
+import fr.ldnr.SpringStockMvc.repositories.CartRepository;
 import fr.ldnr.SpringStockMvc.repositories.CategoryRepository;
+import fr.ldnr.SpringStockMvc.repositories.CartItemRepository;
+import fr.ldnr.SpringStockMvc.repositories.UserRepository;
+import fr.ldnr.SpringStockMvc.services.CartService;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+//import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +32,18 @@ public class ArticleController {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    CartItemRepository cartItemRepository;
+
+    @Autowired
+    CartRepository cartRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    private CartService cartService;
 
     //@RequestMappingValue(value="/index" , method=RequestMethod.GET)
     @GetMapping("/index")
@@ -73,6 +94,56 @@ public class ArticleController {
     model.addAttribute("listCategories", categoryRepository.findAll());
     return "editArticle";
   }
+
+  @PostMapping("/addToCart")
+  public String addToCart(@RequestParam Long articleId,
+      @RequestParam(defaultValue = "1") int quantity) {
+
+    Article article = articleRepository.findById(articleId)
+        .orElseThrow(() -> new RuntimeException("Article not found"));
+
+    for (int i = 0; i < quantity; i++) {
+      cartService.addArticle(article);
+    }
+
+    return "redirect:/index";
+  /*String username = authentication.getName();
+
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+
+    Cart cart = cartRepository.findByUserId(user.getId())
+        .orElseGet(() -> {
+          Cart newCart = new Cart();
+          newCart.setUser(user);
+          return cartRepository.save(newCart);
+        });
+
+    Article article = articleRepository.findById(articleId)
+        .orElseThrow(() -> new RuntimeException("Article not found"));
+
+    CartItem cartItem = cartItemRepository.findByCartIdAndArticleId(cart.getId(), articleId)
+        .orElseGet(() -> {
+          CartItem item = new CartItem();
+          item.setCart(cart);
+          item.setArticle(article);
+          item.setQuantity(0);
+          item.setUnitPrice(article.getPrice());
+          return item;
+        });
+
+    cartItem.setQuantity(cartItem.getQuantity() + quantity);
+    cartItemRepository.save(cartItem);
+
+    return "redirect:/cart";*/
+  }
+
+  @GetMapping("/cart")
+  public String getCart(Model model) {
+    model.addAttribute("articles", cartService.getArticles());
+    return "cart";
+  }
+
 
 
   @PostMapping("/save")

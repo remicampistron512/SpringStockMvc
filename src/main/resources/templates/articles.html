@@ -45,6 +45,7 @@
                 <th>Id</th>
                 <th>Description</th>
                 <th>Prix</th>
+                <th>Acheter</th>
                 <th>Modifier</th>
                 <th>Supprimer</th>
               </tr>
@@ -54,6 +55,13 @@
                 <td th:text="${a.id}"></td>
                 <td th:text="${a.description}"></td>
                 <td th:text="${a.price}"></td>
+                <td>
+                  <form th:action="@{/addToCart}" method="post" class="row g-3 align-items-end mb-4">
+                    <input type="hidden" name="articleId" th:value="${a.id}">
+                    <input type="number" name="quantity" value="1" min="1" class="form-control">
+                    <button type="submit" class="btn btn-primary">Ajouter au panier</button>
+                  </form>
+                </td>
                 <td>
                   <a th:href="@{/editArticle(id=${a.id})}" class="btn btn-sm btn-primary">Edit</a>
                 </td>
