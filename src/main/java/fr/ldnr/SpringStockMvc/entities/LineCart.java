@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,9 @@ public class LineCart {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Long articleId;
+  @OneToOne
+  private Article article;
+
   private int quantity;
 
   @ManyToOne
