@@ -55,10 +55,7 @@
                 <td th:text="${a.description}"></td>
                 <td th:text="${a.price}"></td>
                 <td>
-                  <a class="btn btn-sm btn-success"
-                     th:href="@{/article(id=${a.id})}">
-                    Edit
-                  </a>
+                  <a th:href="@{/editArticle(id=${a.id})}" class="btn btn-sm btn-primary">Edit</a>
                 </td>
                 <td>
                   <a class="btn btn-sm btn-danger"

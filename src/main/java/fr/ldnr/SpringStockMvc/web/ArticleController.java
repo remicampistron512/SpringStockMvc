@@ -64,7 +64,18 @@ public class ArticleController {
       return "article";
     }
 
-    @PostMapping("/save")
+  @GetMapping("/editArticle")
+  public String editArticle(@RequestParam("id") Long id, Model model) {
+    Article article = articleRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Article introuvable"));
+
+    model.addAttribute("article", article);
+    model.addAttribute("listCategories", categoryRepository.findAll());
+    return "editArticle";
+  }
+
+
+  @PostMapping("/save")
     public String save(@Valid Article article, BindingResult bindingResult){
       if(bindingResult.hasErrors()) return "article";
       articleRepository.save(article);

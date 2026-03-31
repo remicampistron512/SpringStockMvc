@@ -17,7 +17,7 @@
 
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-          Saisir nouvel article
+          Modifier l'article
         </div>
 
         <div class="card-body">
@@ -37,12 +37,10 @@
             <div class="mb-3">
               <label class="form-label">Catégorie</label>
               <select class="form-select" aria-label="Selection catégorie"  th:field="*{category.id}">
-                <option th:each="c : ${listCategories}" class="nav-item" value="${c.id}" th:text="${c.name}"></option>
+                <option th:each="c : ${listCategories}" class="nav-item" th:value="${c.id}". th:text="${c.name}"></option>
               </select>
-
-
             </div>
-
+            <input type="hidden" th:field="*{id}" />
             <button type="submit" class="btn btn-primary w-100">
               Save
             </button>
