@@ -41,15 +41,17 @@
     </div>
   </nav>
 </header>
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+<nav aria-label="categories" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
   <div class="container">
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li th:each="c : ${listCategories}" class="nav-item">
-      <a th:href="@{/index(categoryId=${c.id})}" th:text="${c.name}">
+      <a class="nav-link" th:href="@{/index(categoryId=${c.id})}" th:text="${c.name}">
 
       </a>
     </li>
     </ul>
+    </div>
   </div>
 </nav>
 
