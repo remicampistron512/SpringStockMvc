@@ -59,6 +59,8 @@ public class ArticleController {
     @GetMapping("/article")
     public String article(Model model){
       model.addAttribute("article", new Article());
+      List<Category> categories = categoryRepository.findAll();
+      model.addAttribute("listCategories",categories);
       return "article";
     }
 

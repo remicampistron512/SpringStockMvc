@@ -45,7 +45,8 @@
                 <th>Id</th>
                 <th>Description</th>
                 <th>Prix</th>
-                <th>Action</th>
+                <th>Modifier</th>
+                <th>Supprimer</th>
               </tr>
               </thead>
               <tbody>
@@ -54,11 +55,18 @@
                 <td th:text="${a.description}"></td>
                 <td th:text="${a.price}"></td>
                 <td>
+                  <a class="btn btn-sm btn-success"
+                     th:href="@{/article(id=${a.id})}">
+                    Edit
+                  </a>
+                </td>
+                <td>
                   <a class="btn btn-sm btn-danger"
                      th:href="@{/delete(id=${a.id}, page=${currentPage}, keyword=${keyword})}">
                     Delete
                   </a>
                 </td>
+
               </tr>
               </tbody>
             </table>
