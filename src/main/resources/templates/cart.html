@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+
 <head>
   <title>Cart</title>
 </head>
 <body>
+<div layout:fragment="content">
+
 
 <h1>Votre panier</h1>
-
-<ul>
-  <li th:each="article : ${articles}">
-    <span th:text="${article.description}"></span> -
-    <span th:text="${article.price}"></span>
-  </li>
-</ul>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Description</th>
+      <th scope="col">Prix</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="article : ${articles}">
+      <td th:text="${article.description}"></td>
+      <td th:text="${article.price}"></td>
+    </tr>
+  </tbody>
+</table>
 
 </body>
 </html>
