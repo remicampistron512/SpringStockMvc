@@ -46,7 +46,7 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li th:each="c : ${listCategories}" class="nav-item">
-      <a class="nav-link" th:href="@{/index(categoryId=${c.id})}" th:text="${c.name}">
+      <a th:classappend="${c.id} == ${categoryId} ? 'active'" class="nav-link" th:href="@{/index(categoryId=${c.id})}" th:text="${c.name}">
 
       </a>
     </li>

@@ -41,7 +41,7 @@ public class ArticleController {
       model.addAttribute("listArticle",articles.getContent());
       model.addAttribute("listCategories",categories);
       model.addAttribute("pages", new int[articles.getTotalPages()]);
-
+      model.addAttribute("categoryId",categoryId);
       model.addAttribute("currentPage",page);
 
       model.addAttribute("keyword",kw);
