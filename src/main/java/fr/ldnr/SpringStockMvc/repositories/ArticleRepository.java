@@ -11,4 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArticleRepository extends JpaRepository<Article,Long> {
   Page<Article> findByDescriptionContains(String description, Pageable pageable);
+
+  Page<Article> findByCategoryId(long categoryId, Pageable pageable);
 }
