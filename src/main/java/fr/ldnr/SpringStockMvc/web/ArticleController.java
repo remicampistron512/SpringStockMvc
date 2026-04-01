@@ -2,12 +2,14 @@ package fr.ldnr.SpringStockMvc.web;
 
 import fr.ldnr.SpringStockMvc.entities.Article;
 import fr.ldnr.SpringStockMvc.entities.Category;
+import fr.ldnr.SpringStockMvc.entities.User;
 import fr.ldnr.SpringStockMvc.repositories.ArticleRepository;
 import fr.ldnr.SpringStockMvc.repositories.CartItemRepository;
 import fr.ldnr.SpringStockMvc.repositories.CartRepository;
 import fr.ldnr.SpringStockMvc.repositories.CategoryRepository;
 import fr.ldnr.SpringStockMvc.repositories.UserRepository;
 import fr.ldnr.SpringStockMvc.services.CartService;
+import fr.ldnr.SpringStockMvc.services.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,9 @@ public class ArticleController {
 
   @Autowired
   private CartService cartService;
+
+  @Autowired
+  UserService userService;
 
   //@RequestMappingValue(value="/index" , method=RequestMethod.GET)
   @GetMapping({"/","/index"})
@@ -111,7 +116,31 @@ public class ArticleController {
     }
 
     return "redirect:/index";
-  /*String username = authentication.getName();
+  }
+
+  @PostMapping("/login")
+  public String processLogin(@RequestParam String username,
+      @RequestParam String password) {
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+    if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+      return "redirect:/home";
+    }
+
+    return "login";
+
+  }
+  @GetMapping("/login")
+  public String login(){
+    return "login";
+  }
+
+  @PostMapping("/addToCart2")
+  public String addToCart2(@RequestParam Long articleId,
+      @RequestParam(defaultValue = "1") int quantity) {
+
+    /*String username = authentication.getName();
 
     User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new RuntimeException("User not found"));
@@ -140,7 +169,18 @@ public class ArticleController {
     cartItemRepository.save(cartItem);
 
     return "redirect:/cart";*/
+
+    Article article = articleRepository.findById(articleId)
+        .orElseThrow(() -> new RuntimeException("Article not found"));
+
+    for (int i = 0; i < quantity; i++) {
+      cartService.addArticle(article);
+    }
+
+    return "redirect:/index";
   }
+
+
 
   @GetMapping("/cart")
   public String getCart(Model model) {
@@ -156,5 +196,37 @@ public class ArticleController {
     }
     articleRepository.save(article);
     return "redirect:/index";
+  }
+
+  @GetMapping("/editUser")
+  public String editUser(@RequestParam("id") Long id, Model model) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Utilisateur Introuvable"));
+
+    model.addAttribute("user", user);
+
+    return "editUser";
+  }
+  @GetMapping("/deleteUser")
+  public String deleteUser (Long id) {
+    userRepository.deleteById(id);
+    return "redirect:/users";
+
+  }
+  @GetMapping("/users")
+  public String manageUsers(Model model){
+    List<User> users = userRepository.findAll();
+    model.addAttribute("users", users);
+    return ("users");
+  }
+  @GetMapping("/createUser")
+  public String createUser(Model model){
+    return ("createUser");
+  }
+  @PostMapping("/saveUser")
+  public String saveUser(@Valid User user, BindingResult bindingResult){
+    userRepository.save(user);
+    return "redirect:/index";
+
   }
 }

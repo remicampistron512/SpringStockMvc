@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+
+<head>
+  <meta charset="utf-8">
+  <title>Ajouter un utilisateur</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-4">
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          Ajouter un utilisateur
+        </div>
+
+        <div class="card-body">
+          <form th:action="@{/saveUser}" method="post">
+
+            <div class="mb-3">
+              <label class="form-label">Nom d'utilisateur :</label>
+              <input name="username" class="form-control" type="text">
+
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Mot de passe :</label>
+              <input name="password" class="form-control" type="text">
+
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Rôle</label>
+              <select name="role" class="form-select">
+                <option value="ADMIN" >Administrateur</option>
+                <option value="USER" >Utilisateur</option>
+              </select>
+
+
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              Enregistrer
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

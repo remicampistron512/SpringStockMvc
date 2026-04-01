@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mes articles</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+  <div class="row justify-content-center mt-4">
+    <div class="col-12 col-lg-10">
+
+      <div class="card shadow-sm">
+        <div  class="card-header bg-primary text-white">Gestion des utilisateurs
+        </div>
+
+        <div class="card-body">
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+              <thead class="table-light">
+              <tr>
+                <th>Nom</th>
+                <th>Mot de passe</th>
+                <th>Rôle</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="u : ${users}">
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.password}"></td>
+                <td th:text="${u.role}"></td>
+
+                <td>
+                  <a th:href="@{/editUser(id=${u.id})}" class="btn btn-sm btn-primary">Modifier</a>
+                </td>
+                <td>
+                  <a class="btn btn-sm btn-danger"
+                     th:href="@{/deleteUser(id=${u.id})}">
+                    Supprimer
+                  </a>
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
