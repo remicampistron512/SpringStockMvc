@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ArticleController {
@@ -80,9 +81,9 @@ public class ArticleController {
 
 
   @GetMapping("/delete")
-  public String delete(Long id, int page, String keyword) {
+  public String delete(Long id, int page, String keyword, RedirectAttributes redirectAttributes ) {
     articleRepository.deleteById(id);
-
+    redirectAttributes.addFlashAttribute("successMessage", "Article supprimé");
     return "redirect:/index?page=" + page + "&keyword=" + keyword;
   }
 

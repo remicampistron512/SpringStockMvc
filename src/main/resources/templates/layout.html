@@ -58,6 +58,9 @@
 </nav>
 
 <main class="container py-4">
+  <div th:if="${successMessage}" class="alert alert-success">
+    <span th:text="${successMessage}"></span>
+  </div>
   <section layout:fragment="content">
     <!-- Page content -->
   </section>
