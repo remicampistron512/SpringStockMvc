@@ -107,7 +107,7 @@ public class ArticleController {
 
   @PostMapping("/addToCart")
   public String addToCart(@RequestParam Long articleId,
-      @RequestParam(defaultValue = "1") int quantity) {
+      @RequestParam(defaultValue = "1") int quantity,RedirectAttributes redirectAttributes) {
 
     Article article = articleRepository.findById(articleId)
         .orElseThrow(() -> new RuntimeException("Article not found"));
@@ -115,23 +115,31 @@ public class ArticleController {
     for (int i = 0; i < quantity; i++) {
       cartService.addArticle(article);
     }
-
+    redirectAttributes.addFlashAttribute("successMessage", "Article ajouté au panier");
     return "redirect:/index";
   }
 
   @PostMapping("/login")
   public String processLogin(@RequestParam String username,
-      @RequestParam String password) {
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+      @RequestParam String password,RedirectAttributes redirectAttributes) {
 
-    if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-      return "redirect:/home";
+    Optional<User> userOpt = userRepository.findByUsername(username);
+
+    if (userOpt.isEmpty()) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur introuvable");
+      return "redirect:/login";
+    }
+    User user = userOpt.get();
+
+    if (!password.equals(user.getPassword())) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Mot de passe incorrect");
+      return "redirect:/login";
     }
 
-    return "login";
-
+    redirectAttributes.addFlashAttribute("successMessage", "Connexion réussie");
+    return "redirect:/home";
   }
+
   @GetMapping("/login")
   public String login(){
     return "login";
@@ -191,25 +199,32 @@ public class ArticleController {
 
 
   @PostMapping("/save")
-  public String save(@Valid Article article, BindingResult bindingResult) {
+  public String save(@Valid Article article, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
     if (bindingResult.hasErrors()) {
       return "article";
     }
+    redirectAttributes.addFlashAttribute("successMessage", "Article modifié");
     articleRepository.save(article);
     return "redirect:/index";
   }
 
   @GetMapping("/editUser")
-  public String editUser(@RequestParam("id") Long id, Model model) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Utilisateur Introuvable"));
+  public String editUser(@RequestParam("id") Long id, Model model,RedirectAttributes redirectAttributes) {
 
+
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isEmpty()) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur introuvable");
+      return "/editUser.id="+id;
+    }
     model.addAttribute("user", user);
 
     return "editUser";
   }
   @GetMapping("/deleteUser")
-  public String deleteUser (Long id) {
+  public String deleteUser (Long id,RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("successMessage", "Utilisateur supprimé");
     userRepository.deleteById(id);
     return "redirect:/users";
 
@@ -225,7 +240,8 @@ public class ArticleController {
     return ("createUser");
   }
   @PostMapping("/saveUser")
-  public String saveUser(@Valid User user, BindingResult bindingResult){
+  public String saveUser(@Valid User user, BindingResult bindingResult,RedirectAttributes redirectAttributes){
+    redirectAttributes.addFlashAttribute("successMessage", "Utilisateur enregistré");
     userRepository.save(user);
     return "redirect:/index";
 
