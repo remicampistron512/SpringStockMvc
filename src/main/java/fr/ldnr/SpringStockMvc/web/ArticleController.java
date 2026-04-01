@@ -10,6 +10,7 @@ import fr.ldnr.SpringStockMvc.repositories.UserRepository;
 import fr.ldnr.SpringStockMvc.services.CartService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,10 +50,15 @@ public class ArticleController {
     Page<Article> articles;
     if (categoryId != 0) {
       articles = articleRepository.findByCategoryId(categoryId, PageRequest.of(page, 5));
+      Category currentCategory = categoryRepository.findById(categoryId)
+          .orElseThrow(() -> new RuntimeException("Article not found"));
+      String currentCategoryName = currentCategory.getName();
+      model.addAttribute("currentCategoryName", currentCategoryName);
     } else {
       articles = articleRepository.findByDescriptionContains(kw,
           PageRequest.of(page, 5));
     }
+
 
     List<Category> categories = categoryRepository.findAll();
     model.addAttribute("listArticle", articles.getContent());
@@ -60,6 +66,7 @@ public class ArticleController {
     model.addAttribute("pages", new int[articles.getTotalPages()]);
     model.addAttribute("categoryId", categoryId);
     model.addAttribute("currentPage", page);
+
 
     model.addAttribute("keyword", kw);
 

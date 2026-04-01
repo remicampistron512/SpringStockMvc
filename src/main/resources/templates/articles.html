@@ -16,15 +16,14 @@
     <div class="col-12 col-lg-10">
 
       <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          Liste des articles
+        <div th:text="${currentCategoryName}" class="card-header bg-primary text-white">
         </div>
 
         <div class="card-body">
 
           <form th:action="@{/index}" method="get" class="row g-3 align-items-end mb-4">
             <div class="col-md-6">
-              <label for="keyword" class="form-label">Keyword</label>
+              <label for="keyword" class="form-label">Mot clé</label>
               <input id="keyword"
                      type="text"
                      name="keyword"
@@ -33,7 +32,7 @@
             </div>
             <div class="col-md-auto">
               <button type="submit" class="btn btn-primary">
-                Search
+                Rechercher
               </button>
             </div>
           </form>
@@ -57,18 +56,29 @@
                 <td th:text="${a.price}"></td>
                 <td>
                   <form th:action="@{/addToCart}" method="post" class="row g-3 align-items-end mb-4">
+
                     <input type="hidden" name="articleId" th:value="${a.id}">
-                    <input type="number" name="quantity" value="1" min="1" class="form-control">
-                    <button type="submit" class="btn btn-primary">Ajouter au panier</button>
+                    <div class="col-auto">
+                      <button type="submit" class="btn btn-primary">
+                        Ajouter au panier
+                      </button>
+                    </div>
+                    <div class="col-auto">
+                      <input type="number" name="quantity" value="1" min="1" class="form-control">
+                    </div>
+
+
+
+                  </form>
                   </form>
                 </td>
                 <td>
-                  <a th:href="@{/editArticle(id=${a.id})}" class="btn btn-sm btn-primary">Edit</a>
+                  <a th:href="@{/editArticle(id=${a.id})}" class="btn btn-sm btn-primary">Modifier</a>
                 </td>
                 <td>
                   <a class="btn btn-sm btn-danger"
                      th:href="@{/delete(id=${a.id}, page=${currentPage}, keyword=${keyword})}">
-                    Delete
+                    Supprimer
                   </a>
                 </td>
 
