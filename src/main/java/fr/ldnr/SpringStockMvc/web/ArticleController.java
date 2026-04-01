@@ -137,13 +137,14 @@ public class ArticleController {
     }
 
     redirectAttributes.addFlashAttribute("successMessage", "Connexion réussie");
-    return "redirect:/home";
+    return "redirect:/index";
   }
 
   @GetMapping("/login")
   public String login(){
     return "login";
   }
+
 
   @PostMapping("/addToCart2")
   public String addToCart2(@RequestParam Long articleId,
