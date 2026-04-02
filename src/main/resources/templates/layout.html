@@ -22,23 +22,48 @@
       </button>
 
       <div class="collapse navbar-collapse" id="mainNavbar">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/index}">Accueil</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/article}">Ajouter un article</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/cart}">Panier</a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link" th:href="@{/createUser}">Ajouter un utilisateur</a>
-        </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/users}">Utilisateurs</a>
-          </li>
-        </ul>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/index}">Accueil</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/article}">Ajouter un article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/cart}">Panier</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/createUser}">Ajouter un utilisateur</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/users}">Utilisateurs</a>
+            </li>
+          </ul>
+
+          <!-- 👇 LOGIN / LOGOUT BLOCK -->
+          <div class="d-flex align-items-center">
+
+            <a th:if="${session.loggedUser == null}"
+               class="btn btn-outline-primary me-2"
+               th:href="@{/login}">
+              Se connecter
+            </a>
+
+            <div th:if="${session.loggedUser != null}" class="d-flex align-items-center">
+      <span class="me-3">
+        Bonjour <strong th:text="${session.loggedUser.username}"></strong>
+      </span>
+
+              <a class="btn btn-outline-danger"
+                 th:href="@{/logout}">
+                Déconnexion
+              </a>
+            </div>
+
+          </div>
+
+        </div>
       </div>
     </div>
   </nav>

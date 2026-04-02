@@ -1,5 +1,6 @@
 package fr.ldnr.SpringStockMvc.web;
 
+import fr.ldnr.SpringStockMvc.entities.SessionUser;
 import fr.ldnr.SpringStockMvc.entities.User;
 import fr.ldnr.SpringStockMvc.repositories.UserRepository;
 import fr.ldnr.SpringStockMvc.services.AuthService;
@@ -37,7 +38,13 @@ public class AuthController {
 
     try {
       User user = authService.authenticate(username, password);
-      session.setAttribute("loggedUser", user);
+
+      SessionUser sessionUser = new SessionUser(
+          user.getId(),
+          user.getUsername(),
+          user.getRole()
+      );
+      session.setAttribute("loggedUser", sessionUser);
       redirectAttributes.addFlashAttribute("successMessage", "Connexion réussie");
       return "redirect:/index";
 
@@ -45,5 +52,12 @@ public class AuthController {
       redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
       return "redirect:/login";
     }
+  }
+
+  @GetMapping("/logout")
+  public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+    session.invalidate(); // destroys session completely
+    redirectAttributes.addFlashAttribute("successMessage", "Déconnexion réussie");
+    return "redirect:/login";
   }
 }
