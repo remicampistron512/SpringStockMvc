@@ -14,12 +14,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class CartController {
 
+  /**
+   * Controler handling cart interactions
+   */
   @Autowired
   private ArticleRepository articleRepository;
 
   @Autowired
   private CartService cartService;
 
+  /**
+   * Add an article to the cart
+   * @param articleId the article id
+   * @param quantity the quantity
+   * @param redirectAttributes used to pass error/success messages
+   * @return redirect to the articles list
+   */
   @PostMapping("/addToCart")
   public String addToCart(
       @RequestParam Long articleId,
@@ -37,6 +47,12 @@ public class CartController {
     return "redirect:/index";
   }
 
+  /**
+   * Remove an article from the cart
+   * @param articleId  the article id
+   * @param redirectAttributes used to pass error/success messages
+   * @return redirect to the cart
+   */
   @PostMapping("/removeFromCart")
   public String removeFromCart(
       @RequestParam Long articleId,
@@ -61,6 +77,11 @@ public class CartController {
     return "redirect:/cart";
   }
 
+  /**
+   * Display the cart
+   * @param model data to pass to the view
+   * @return the cart view
+   */
   @GetMapping("/cart")
   public String getCart(Model model) {
     model.addAttribute("articles", cartService.getArticles());

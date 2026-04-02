@@ -20,12 +20,33 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ArticleController {
 
+  /**
+   * Controller responsible for handling articles
+   * <p>
+   * This controller allows  to:
+   * <ul>
+   *     <li>Display all articles</li>
+   *     <li>Add an article</li>
+   *     <li>Edit an article</li>
+   *     <li>Save an article</li>
+   *     <li>Delete an article</li>
+   * </ul>
+   */
+
   @Autowired
   private ArticleRepository articleRepository;
 
   @Autowired
   private CategoryRepository categoryRepository;
 
+  /**
+   * Display all articles
+   * @param model data to pass to the view
+   * @param page pager handling
+   * @param kw keyword filtering
+   * @param categoryId category filtering
+   * @return the articles view
+   */
   @GetMapping({"/", "/index"})
   public String index(
       Model model,
@@ -58,6 +79,11 @@ public class ArticleController {
     return "articles";
   }
 
+  /**
+   * Display the article form
+   * @param model data to pass to the view
+   * @return the article view
+   */
   @GetMapping("/article")
   public String articleForm(Model model) {
     model.addAttribute("article", new Article());
@@ -65,6 +91,12 @@ public class ArticleController {
     return "article";
   }
 
+  /**
+   * Form to edit an article
+   * @param id the article id
+   * @param model data to pass to the view
+   * @return
+   */
   @GetMapping("/editArticle")
   public String editArticle(@RequestParam("id") Long id, Model model) {
     Article article = articleRepository.findById(id)
@@ -75,6 +107,20 @@ public class ArticleController {
     return "editArticle";
   }
 
+  /**
+   * Handles the creation or update of an article.
+   * <p>
+   * If validation errors are present, the form is redisplayed with errors.
+   * Otherwise, the article is saved in the database and the user is redirected
+   * to the index page with a success message.
+   *
+   * @param article the article entity populated from the form
+   * @param bindingResult contains validation errors (if any)
+   * @param model used to pass data back to the view in case of validation errors
+   * @param redirectAttributes used to pass success messages after redirect
+   * @return the form view ("article" or "editArticle") if validation fails,
+   *         otherwise a redirect to the index page
+   */
   @PostMapping("/save")
   public String save(
       @Valid Article article,
@@ -96,6 +142,18 @@ public class ArticleController {
     return "redirect:/index";
   }
 
+  /**
+   * Deletes an article by its identifier.
+   * <p>
+   * After deletion, the user is redirected back to the index page while
+   * preserving pagination and search keyword parameters.
+   *
+   * @param id the identifier of the article to delete
+   * @param page the current page number (used to maintain pagination after redirect)
+   * @param keyword the current search keyword (used to maintain filtering after redirect)
+   * @param redirectAttributes used to pass a success message after redirect
+   * @return a redirect to the index page with pagination and filtering parameters
+   */
   @GetMapping("/delete")
   public String delete(
       @RequestParam Long id,

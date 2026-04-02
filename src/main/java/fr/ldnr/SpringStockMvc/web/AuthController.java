@@ -17,18 +17,35 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AuthController {
 
+  /**
+   * Controller handling authentification processes
+   */
   @Autowired
   private UserRepository userRepository;
 
-  @GetMapping("/login")
-  public String login() {
-    return "login";
-  }
 
   public AuthController(AuthService authService) {
     this.authService = authService;
   }
   private final AuthService authService;
+
+  /**
+   * Handling of the login page
+   * @return the login view
+   */
+  @GetMapping("/login")
+  public String login() {
+    return "login";
+  }
+
+  /**
+   * Login processing
+   * @param username name of the user
+   * @param password password
+   * @param session the httpsession containing all the relevant user info
+   * @param redirectAttributes used to pass error/success messages
+   * @return redirect to the right page
+   */
   @PostMapping("/login")
   public String processLogin(
       @RequestParam String username,
@@ -54,6 +71,12 @@ public class AuthController {
     }
   }
 
+  /**
+   * Handling of the logout processing
+   * @param session the httpsession object containing all the relevant user info
+   * @param redirectAttributes used to pass error/success messages
+   * @return redirect to the right page
+   */
   @GetMapping("/logout")
   public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
     session.invalidate(); // destroys session completely
