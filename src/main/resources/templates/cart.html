@@ -5,27 +5,66 @@
       layout:decorate="layout">
 
 <head>
-  <title>Cart</title>
+  <title>Panier</title>
 </head>
 <body>
 <div layout:fragment="content">
 
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="mb-1">Votre panier</h1>
+      <p class="text-muted mb-0">Retrouvez ici les articles ajoutés à votre panier.</p>
+    </div>
+    <a th:href="@{/index}" class="btn btn-outline-primary">
+      Continuer les achats
+    </a>
+  </div>
 
-<h1>Votre panier</h1>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Description</th>
-      <th scope="col">Prix</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:each="article : ${articles}">
-      <td th:text="${article.description}"></td>
-      <td th:text="${article.price}"></td>
-    </tr>
-  </tbody>
-</table>
+  <div th:if="${#lists.isEmpty(articles)}" class="card shadow-sm border-0">
+    <div class="card-body text-center py-5">
+      <h3 class="mb-3">Votre panier est vide</h3>
+      <p class="text-muted mb-4">Ajoutez des articles depuis la page d’accueil.</p>
+      <a th:href="@{/index}" class="btn btn-primary">Voir les articles</a>
+    </div>
+  </div>
+
+  <div th:if="${!#lists.isEmpty(articles)}" class="card shadow-sm border-0">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+          <tr>
+            <th scope="col">Description</th>
+            <th scope="col" class="text-end">Prix</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="article : ${articles}">
+            <td th:text="${article.description}"></td>
+            <td class="text-end" th:text="${#numbers.formatDecimal(article.price, 1, 2)} + ' €'"></td>
+            <td class="text-center">
+              <form th:action="@{/removeFromCart}" method="post" class="d-inline">
+                <input type="hidden" name="articleId" th:value="${article.id}">
+                <button type="submit" class="btn btn-sm btn-outline-danger">
+                  Supprimer
+                </button>
+              </form>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="my-4">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <strong class="fs-5">Total</strong>
+        <strong class="fs-5" th:text="${#numbers.formatDecimal(total, 1, 2)} + ' €'"></strong>
+      </div>
+    </div>
+  </div>
+
 </div>
 </body>
 </html>

@@ -20,5 +20,14 @@ public class CartService {
   public void clear() {
     articles.clear();
   }
-}
 
+  public boolean removeArticleById(Long articleId) {
+    for (Article article : articles) {
+      if (article.getId() != null && article.getId().equals(articleId)) {
+        articles.remove(article);
+        return true;
+      }
+    }
+    return false;
+  }
+}

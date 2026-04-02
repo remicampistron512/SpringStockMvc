@@ -37,52 +37,41 @@ public class CartController {
     return "redirect:/index";
   }
 
-  @PostMapping("/addToCart2")
-  public String addToCart2(@RequestParam Long articleId,
-      @RequestParam(defaultValue = "1") int quantity) {
+  @PostMapping("/removeFromCart")
+  public String removeFromCart(
+      @RequestParam Long articleId,
+      RedirectAttributes redirectAttributes) {
 
-    /*String username = authentication.getName();
+    try {
+      boolean removed = cartService.removeArticleById(articleId);
 
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+      if (removed) {
+        redirectAttributes.addFlashAttribute("successMessage", "Article supprimé du panier");
+        System.out.println("Article supprimé du panier");
+      } else {
+        redirectAttributes.addFlashAttribute("errorMessage", "Article non présent dans le panier");
+        System.out.println("Article non présent dans le panier");
+      }
 
-    Cart cart = cartRepository.findByUserId(user.getId())
-        .orElseGet(() -> {
-          Cart newCart = new Cart();
-          newCart.setUser(user);
-          return cartRepository.save(newCart);
-        });
-
-    Article article = articleRepository.findById(articleId)
-        .orElseThrow(() -> new RuntimeException("Article not found"));
-
-    CartItem cartItem = cartItemRepository.findByCartIdAndArticleId(cart.getId(), articleId)
-        .orElseGet(() -> {
-          CartItem item = new CartItem();
-          item.setCart(cart);
-          item.setArticle(article);
-          item.setQuantity(0);
-          item.setUnitPrice(article.getPrice());
-          return item;
-        });
-
-    cartItem.setQuantity(cartItem.getQuantity() + quantity);
-    cartItemRepository.save(cartItem);
-
-    return "redirect:/cart";*/
-
-    Article article = articleRepository.findById(articleId)
-        .orElseThrow(() -> new RuntimeException("Article not found"));
-
-    for (int i = 0; i < quantity; i++) {
-      cartService.addArticle(article);
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de la suppression");
+      e.printStackTrace();
     }
 
-    return "redirect:/index";
+    return "redirect:/cart";
   }
+
   @GetMapping("/cart")
   public String getCart(Model model) {
     model.addAttribute("articles", cartService.getArticles());
+
+    double total = cartService.getArticles()
+        .stream()
+        .mapToDouble(Article::getPrice)
+        .sum();
+
+    model.addAttribute("total", total);
+
     return "cart";
   }
 }
